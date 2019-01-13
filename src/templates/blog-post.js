@@ -2,6 +2,7 @@ import React from 'react';
 import Layout from '../components/layout';
 import Img from 'gatsby-image';
 import Metatags from '../components/Metatags';
+import Icon from '../images/gatsby-icon.png'
 import { graphql } from 'gatsby'
 
 function BlogPost(props) {
@@ -9,19 +10,22 @@ function BlogPost(props) {
     const post = props.data.markdownRemark;
     const url = props.data.site.siteMetadata.siteUrl
     const { title, description } = post.frontmatter;
-    const thumbnail = post.frontmatter.image.childImageSharp.resize.src
+    const thumbnail =
+        post.frontmatter.image &&
+        post.frontmatter.image.childImageSharp.resize.src
+
     return (
         <Layout>
             <Metatags
                 title={title}
                 description={description}
-                thumbnail={url + thumbnail}
+                thumbnail={thumbnail ? url + thumbnail : url + Icon}
                 url={url}
                 pathname={props.location.pathname}
             />
             <div>
                 <h1>{title}</h1>
-                <Img fluid={post.frontmatter.image.childImageSharp.fluid} />
+                {thumbnail && <Img fluid={post.frontmatter.image.childImageSharp.fluid} />}
                 <div dangerouslySetInnerHTML={{ __html: post.html }} />
             </div>
         </Layout>
